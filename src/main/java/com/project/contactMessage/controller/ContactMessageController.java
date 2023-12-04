@@ -61,7 +61,7 @@ public class ContactMessageController {
     //page ve pageable tum yapilar data domainden import edilmeli
 
     public Page<ContactMessageResponse> searchBySubject(
-            @RequestParam(value = "email") String subject, //gelen degerlerde subject olmazsa hata verir. handle etmeliyiz
+            @RequestParam(value = "subject") String subject, //gelen degerlerde subject olmazsa hata verir. handle etmeliyiz
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size",defaultValue = "10") int size,
             @RequestParam(value = "sort", defaultValue = "dateTime") String sort,
@@ -85,6 +85,7 @@ public class ContactMessageController {
     public ResponseEntity<ContactMessage> getByIdWithPath(@PathVariable Long contactMessageId ){
         return ResponseEntity.ok(contactMessageService.getContactMessageById(contactMessageId));
     }
+
 
 
     @GetMapping("/searchBetweenDates")// http://localhost:8080/contactMessages/searchBetweenDates?beginDate=2023-09-13&endDate=2023-09-15  + GET
