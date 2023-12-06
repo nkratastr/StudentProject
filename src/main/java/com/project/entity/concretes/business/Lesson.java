@@ -28,6 +28,8 @@ public class Lesson {
     private Boolean isCompulsory;
 
     @JsonIgnore
+    //lessons degiskeni yoksa hata verir
     @ManyToMany(mappedBy = "lessons", cascade = CascadeType.REMOVE)
     private Set<LessonProgram> lessonPrograms;
+    //Ayni degerden bir tane daha olmasin diye List degil Set diye ayarladik
 }

@@ -41,6 +41,7 @@ public class LessonProgram {
     private Set<Lesson> lessons;
 
     @ManyToOne(cascade = CascadeType.PERSIST) // EducationTerm kontrol ediyor yoksa olusturuyor
+    //Persist ifadesini baba cocuk gibi aciklayabiliriz. Babasi varsa cocugu da olustur
     private EducationTerm educationTerm;
 
     @ManyToMany(mappedBy ="lessonProgramList", fetch = FetchType.EAGER)
@@ -49,5 +50,5 @@ public class LessonProgram {
     @PreRemove//remove yapilmadan once asagidaki metodu yap demis oluyoruz
     private void removeLessonProgramFromUser(){
         users.forEach(user -> user.getLessonProgramList().remove(this));
-    }
+    }//icinde bulundugum sinifin instance ile silme yaptigim icin this  kullandim
 }
