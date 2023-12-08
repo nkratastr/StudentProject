@@ -50,7 +50,7 @@ public class User {
     @Column(unique = true)
     private String email;
 
-    private Boolean built_in;
+    private Boolean built_in;//Degistirilemez ve degistirilmesi dahi teklif edilemez
 
     private String motherName;
 

@@ -33,8 +33,8 @@ public class UserDetailsImpl implements UserDetails {
         this.name = name;
         this.isAdvisor = isAdvisor;
         this.password = password;
-        List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
-        grantedAuthorities.add(new SimpleGrantedAuthority(role));
+        List<GrantedAuthority> grantedAuthorities = new ArrayList<>(); //authorities role un securitydeki karsiligidir
+        grantedAuthorities.add(new SimpleGrantedAuthority(role)); // roller collection oldugu icin list ile handle ettik
         this.authorities=grantedAuthorities;
         this.ssn = ssn;
     }

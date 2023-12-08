@@ -42,10 +42,11 @@ public class AuthTokenFilter extends OncePerRequestFilter {
             if(jwt != null && jwtUtils.validateJwtToken(jwt) ){
                 String userName = jwtUtils.getUserNameFromJwtToken(jwt);
                 UserDetails userDetails = userDetailsService.loadUserByUsername(userName);
-                request.setAttribute("username", userName);
+                request.setAttribute("username", userName); // ilerde tekrar tokenin parcalamadan usernamei cekebilecegiz
+
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                         userDetails,null,userDetails.getAuthorities());
-                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request)); // kullanicini ip vb bilgilerini almak icin kullaniyoruz
                 SecurityContextHolder.getContext().setAuthentication(authentication);
 
             }
