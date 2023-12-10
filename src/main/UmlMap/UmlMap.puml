@@ -1,0 +1,373 @@
+@startuml
+class com.project.security.config.WebSecurityConfig {
+- UserDetailsServiceImpl userDetailsService
+- AuthEntryPointJwt authEntryPointJwt
+- {static} String[] AUTH_WHITE_LIST
++ AuthenticationManager authenticationManager(AuthenticationConfiguration)
++ SecurityFilterChain filterChain(HttpSecurity)
++ AuthTokenFilter authenticationJwtTokenFilter()
++ PasswordEncoder passwordEncoder()
++ DaoAuthenticationProvider authenticationProvider()
++ WebMvcConfigurer corsConfigurer()
+}
+class com.project.contactMessage.dto.ContactMessageResponse {
+- String name
+- String email
+- String subject
+- String message
+- LocalDateTime dateTime
+}
+class com.project.contactMessage.entity.ContactMessage {
+- Long id
+- String name
+- String email
+- String subject
+- String message
+- LocalDateTime dateTime
+}
+class com.project.service.UserRoleService {
+- UserRoleRepository userRoleRepository
++ UserRole getUserRole(RoleType)
+}
+enum com.project.entity.enums.Term {
++  FALL_SEMESTER
++  SPRING_SEMESTER
+}
+class com.project.service.validator.UniquePropertyValidator {
+- UserRepository userRepository
++ void checkDuplicate(String,String,String,String)
+}
+class com.project.entity.concretes.business.EducationTerm {
+- Long id
+- Term term
+- LocalDate startDate
+- LocalDate endDate
+- LocalDate lastRegistrationDate
+- List<LessonProgram> lessonProgram
+}
+abstract class com.project.payload.response.abstracts.BaseUserResponse {
+- Long userId
+- String username
+- String name
+- String surname
+- LocalDate birthDay
+- String ssn
+- String birthPlace
+- String phoneNumber
+- Gender gender
+- String email
+- String userRole
+}
+class com.project.contactMessage.dto.ContactMessageRequest {
+- String name
+- String email
+- String subject
+- String message
+}
+class com.project.controller.AuthenticationController {
+- UserService userService
+- AuthenticationService authenticationService
++ ResponseEntity<AuthResponse> authenticateUser(LoginRequest)
++ ResponseEntity<UserResponse> findByUsername(HttpServletRequest)
++ ResponseEntity<String> updatePassword(UpdatePasswordRequest,HttpServletRequest)
+}
+class com.project.entity.concretes.user.UserRole {
+- Integer id
+- RoleType roleType
+- String roleName
+}
+class com.project.security.service.UserDetailsImpl {
+- Long id
+- String username
+- String name
+- Boolean isAdvisor
+- String password
+- String ssn
+- Collection<? extends GrantedAuthority> authorities
++ Collection<? extends GrantedAuthority> getAuthorities()
++ String getPassword()
++ String getUsername()
++ boolean isAccountNonExpired()
++ boolean isAccountNonLocked()
++ boolean isCredentialsNonExpired()
++ boolean isEnabled()
++ boolean equals(Object)
+}
+enum com.project.entity.enums.Gender {
++  MALE
++  FEMALE
+}
+class com.project.exception.BadRequestException {
+}
+class com.project.contactMessage.messages.Messages {
++ {static} String NOT_FOUND_MESSAGE
++ {static} String CONTACT_MESSAGE_DELETED_SUCCESSFULLY
++ {static} String WRONG_TIME_FORMAT
++ {static} String WRONG_DATE_FORMAT
+}
+abstract class com.project.payload.request.abstracts.BaseUserRequest {
+- String password
+- Boolean builtIn
+}
+class com.project.security.jwt.AuthTokenFilter {
+- {static} Logger LOGGER
+- JwtUtils jwtUtils
+- UserDetailsServiceImpl userDetailsService
+# void doFilterInternal(HttpServletRequest,HttpServletResponse,FilterChain)
+- String parseJwt(HttpServletRequest)
+}
+class com.project.service.UserService {
+- UserRepository userRepository
+- UniquePropertyValidator uniquePropertyValidator
+- UserMapper userMapper
+- UserRoleService userRoleService
+- PasswordEncoder passwordEncoder
++ ResponseMessage<UserResponse> saveUser(UserRequest,String)
++ Page<UserResponse> getUserByPage(int,int,String,String,String)
+}
+interface com.project.contactMessage.repository.ContactMessageRepository {
+~ Page<ContactMessage> findByEmailEquals(String,Pageable)
+~ Page<ContactMessage> findBySubjectEquals(String,Pageable)
+~ List<ContactMessage> findMessagesBetweenDates(LocalDate,LocalDate)
+~ List<ContactMessage> findMessagesBetweenTimes(int,int,int,int)
+}
+class com.project.payload.messages.SuccessMessages {
++ {static} String PASSWORD_CHANGED_RESPONSE_MESSAGE
++ {static} String USER_CREATE
+}
+class com.project.controller.UserController {
+- UserService userService
++ ResponseEntity<ResponseMessage<UserResponse>> saveUser(UserRequest,String)
++ ResponseEntity<Page<UserResponse>> getUserByPage(String,int,int,String,String)
+}
+interface com.project.repository.UserRoleRepository {
+~ Optional<UserRole> findByEnumRoleEquals(RoleType)
+}
+class com.project.service.AuthenticationService {
+- UserRepository userRepository
+- AuthenticationManager authenticationManager
+- JwtUtils jwtUtils
+- UserMapper userMapper
+- PasswordEncoder passwordEncoder
++ ResponseEntity<AuthResponse> authenticateUser(LoginRequest)
++ UserResponse findByUsername(String)
++ void updatePassword(UpdatePasswordRequest,HttpServletRequest)
+}
+class com.project.payload.response.AuthResponse {
+- String username
+- String ssn
+- String role
+- String token
+- String name
+}
+class com.project.entity.concretes.user.User {
+- Long id
+- String username
+- String ssn
+- String name
+- String surname
+- LocalDate birthDay
+- String birthPlace
+- String password
+- String phoneNumber
+- String email
+- Boolean built_in
+- String motherName
+- String fatherName
+- int studentNumber
+- boolean isActive
+- Boolean isAdvisor
+- Long advisorTeacherId
+- Gender gender
+- UserRole userRole
+- List<StudentInfo> studentInfos
+- Set<LessonProgram> lessonProgramList
+- List<Meet> meetList
+}
+class com.project.security.jwt.JwtUtils {
+- {static} Logger LOGGER
+- String jwtSecret
+- long jwtExpirationMs
++ String generateJwtToken(Authentication)
++ String generateJwtTokenFromUsername(String)
++ boolean validateJwtToken(String)
++ String getUserNameFromJwtToken(String)
+}
+interface com.project.repository.UserRepository {
+~ User findByUsernameEquals(String)
+~ User findByUsername(String)
+~ boolean existsByUsername(String)
+~ boolean existsBySsn(String)
+~ boolean existsByPhoneNumber(String)
+~ boolean existsByEmail(String)
+}
+class com.project.entity.concretes.business.Meet {
+- Long id
+- String description
+- LocalDate date
+- LocalTime startTime
+- LocalTime stopTime
+- User advisoryTeacher
+- List<User> studentList
+}
+class com.project.exception.ResourceNotFoundException {
+}
+class com.project.payload.response.ResponseMessage {
+- E object
+- String message
+- HttpStatus status
+}
+class com.project.payload.request.business.UpdatePasswordRequest {
+- String oldPassword
+- String newPassword
+}
+class com.project.security.service.UserDetailsServiceImpl {
+- UserRepository userRepository
++ UserDetails loadUserByUsername(String)
+}
+class com.project.security.jwt.AuthEntryPointJwt {
+- {static} Logger LOGGER
++ void commence(HttpServletRequest,HttpServletResponse,AuthenticationException)
+}
+class com.project.payload.messages.ErrorMessages {
++ {static} String NOT_PERMITTED_METHOD_MESSAGE
++ {static} String PASSWORD_NOT_MATCHED
++ {static} String ROLE_NOT_FOUND
++ {static} String NOT_FOUND_USER_USERROLE_MESSAGE
++ {static} String ALREADY_REGISTER_MESSAGE_USERNAME
++ {static} String ALREADY_REGISTER_MESSAGE_SSN
++ {static} String ALREADY_REGISTER_MESSAGE_PHONE
++ {static} String ALREADY_REGISTER_MESSAGE_EMAIL
+}
+enum com.project.entity.enums.RoleType {
++  ADMIN
++  TEACHER
++  STUDENT
++  MANAGER
++  ASSISTANT_MANAGER
++ String name
++ String getName()
+}
+class com.project.contactMessage.mapper.ContactMessageMapper {
++ ContactMessage requestToContactMessage(ContactMessageRequest)
++ ContactMessageResponse contactMessageToResponse(ContactMessage)
+}
+class com.project.entity.concretes.business.StudentInfo {
+- Long id
+- Integer absentee
+- Double midtermExam
+- Double finalExam
+- Double examAverage
+- String infoNote
+- Note letterGrade
+- User teacher
+- User student
+- Lesson lesson
+- EducationTerm educationTerm
+}
+class com.project.payload.mappers.UserMapper {
++ UserResponse mapUserToUserResponse(User)
++ User mapUserRequestToUser(BaseUserRequest)
+}
+class com.project.payload.response.UserResponse {
+}
+class com.project.payload.request.user.UserRequest {
+}
+abstract class com.project.payload.request.abstracts.AbstractUserRequest {
+- String username
+- String name
+- String surname
+- LocalDate birthDay
+- String ssn
+- String birthPlace
+- String phoneNumber
+- Gender gender
+- String email
+}
+class com.project.entity.concretes.business.LessonProgram {
+- Long id
+- Day day
+- LocalTime startTime
+- LocalTime stopTime
+- Set<Lesson> lessons
+- EducationTerm educationTerm
+- Set<User> users
+- void removeLessonProgramFromUser()
+}
+class com.project.StudentManagementApplication {
++ {static} void main(String[])
+}
+enum com.project.entity.enums.Note {
++  AA
++  BA
++  BB
++  CB
++  CC
++  DC
++  DD
++  DZ
++  FF
+}
+class com.project.contactMessage.service.ContactMessageService {
+- ContactMessageRepository contactMessageRepository
+- ContactMessageMapper contactMessageMapper
++ ResponseMessage<ContactMessageResponse> save(ContactMessageRequest)
++ Page<ContactMessageResponse> getAll(int,int,String,String)
++ Page<ContactMessageResponse> searchByEmail(String,int,int,String,String)
++ Page<ContactMessageResponse> searchBySubject(String,int,int,String,String)
++ String deleteById(Long)
++ ContactMessage getContactMessageById(Long)
++ List<ContactMessage> searchByDateBetween(String,String)
++ List<ContactMessage> searchBetweenTimes(String,String,String,String)
+}
+class com.project.payload.request.LoginRequest {
+- String username
+- String password
+}
+class com.project.exception.ConflictException {
+}
+class com.project.contactMessage.controller.ContactMessageController {
+- ContactMessageService contactMessageService
++ ResponseMessage<ContactMessageResponse> save(ContactMessageRequest)
++ Page<ContactMessageResponse> getAll(int,int,String,String)
++ Page<ContactMessageResponse> searchByEmail(String,int,int,String,String)
++ Page<ContactMessageResponse> searchBySubject(String,int,int,String,String)
++ ResponseEntity<String> deleteByIdPath(Long)
++ ResponseEntity<String> deleteByIdParam(Long)
++ ResponseEntity<ContactMessage> getByIdWithPath(Long)
++ ResponseEntity<List<ContactMessage>> searchBetweenDates(String,String)
++ ResponseEntity<List<ContactMessage>> searchBetweenTimes(String,String,String,String)
+}
+class com.project.entity.concretes.business.Lesson {
+- Long lessonId
+- String lessonName
+- Integer creditScore
+- Boolean isCompulsory
+- Set<LessonProgram> lessonPrograms
+}
+enum com.project.entity.enums.Day {
++  MONDAY
++  TUESDAY
++  WEDNESDAY
++  THURSDAY
++  FRIDAY
++  SATURDAY
++  SUNDAY
+}
+
+
+java.io.Serializable <|.. com.project.contactMessage.entity.ContactMessage
+org.springframework.security.core.userdetails.UserDetails <|.. com.project.security.service.UserDetailsImpl
+com.project.exception.RuntimeException <|-- com.project.exception.BadRequestException
+com.project.payload.request.abstracts.AbstractUserRequest <|-- com.project.payload.request.abstracts.BaseUserRequest
+org.springframework.web.filter.OncePerRequestFilter <|-- com.project.security.jwt.AuthTokenFilter
+org.springframework.data.jpa.repository.JpaRepository <|-- com.project.contactMessage.repository.ContactMessageRepository
+org.springframework.data.jpa.repository.JpaRepository <|-- com.project.repository.UserRoleRepository
+org.springframework.data.jpa.repository.JpaRepository <|-- com.project.repository.UserRepository
+com.project.exception.RuntimeException <|-- com.project.exception.ResourceNotFoundException
+org.springframework.security.core.userdetails.UserDetailsService <|.. com.project.security.service.UserDetailsServiceImpl
+org.springframework.security.web.AuthenticationEntryPoint <|.. com.project.security.jwt.AuthEntryPointJwt
+com.project.payload.response.abstracts.BaseUserResponse <|-- com.project.payload.response.UserResponse
+com.project.payload.request.abstracts.BaseUserRequest <|-- com.project.payload.request.user.UserRequest
+com.project.exception.RuntimeException <|-- com.project.exception.ConflictException
+@enduml

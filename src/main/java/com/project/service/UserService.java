@@ -51,6 +51,8 @@ public class UserService {
         //!!! password encode edilecek
         user.setPassword(passwordEncoder.encode(user.getPassword())); // userRequest.getPassword
         //!!! Advisor durumu false yapiliyor
+
+        //BU kismi false yapiyoruz. Eger yapmazsak advisor olmayanlarin hepsi gelsin dersek null olanlar da gelir
         user.setIsAdvisor(Boolean.FALSE);
 
         User savedUser = userRepository.save(user);

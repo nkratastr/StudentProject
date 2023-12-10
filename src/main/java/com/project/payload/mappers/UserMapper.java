@@ -23,6 +23,10 @@ public class UserMapper {
                 .userRole(user.getUserRole().getRoleType().name())
                 .build();
     }
+    //baseUserRequest ini extend eden tüm classlar bu methodu kullanabilir.
+    //sadece user request yapsaydık ,teacher ve student request kullanamazlardır,
+    // oysaki onlarda baseUserRequestten extend yapmıştı.Aynı classın cocukları
+    //bu yaptığımız ile polimorrphism özelliği ortaya çıkar.
     public User mapUserRequestToUser(BaseUserRequest userRequest){
 
         return User.builder()
