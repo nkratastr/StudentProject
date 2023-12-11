@@ -15,6 +15,7 @@ public class ErrorMessages {
     public static final String ALREADY_REGISTER_MESSAGE_PHONE = "Error : User with phone number %s is already registered";
     public static final String ALREADY_REGISTER_MESSAGE_EMAIL = "Error : User with e-mail %s is already registered";
 
+    public static final String NOT_FOUND_USER_MESSAGE = "Error: User not found with id : %s";
 
 
 
