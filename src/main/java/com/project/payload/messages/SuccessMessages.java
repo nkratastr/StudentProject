@@ -12,4 +12,6 @@ public static final String PASSWORD_CHANGED_RESPONSE_MESSAGE="Password changed s
 
     public static final String USER_DELETE = "User is deleted Successfully";
 
+    public static final String USER_UPDATE_MESSAGE = "User is updated Successfully";
+
 }

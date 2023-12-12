@@ -15,13 +15,14 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
-@RestController //Controllerin ozellestirilmis hali. Mvc de controller annotationu ama su an restful api
+ //Controllerin ozellestirilmis hali. Mvc de controller annotationu ama su an restful api
 // kullanacagimiz ve json dosyasiyla caliscaz. Restful api controlluru diyebiliriz.
-@RequestMapping("/contactMessages") //http;//localhost:8080/contactMessages
-@RequiredArgsConstructor
+
 //eskiden servis kati bir interface uzerinden yapilir ve dinjection interface ile yapilirdi
 // su an boyle bir seye ihtiyac kalmadi. interface olsa da bu hata degil. Sadece bir tane concreet classimiz var.
-
+@RestController
+@RequestMapping("/contactMessages") //http;//localhost:8080/contactMessages
+@RequiredArgsConstructor
 public class ContactMessageController {
 
     private  final ContactMessageService contactMessageService;
@@ -37,7 +38,7 @@ public class ContactMessageController {
     }
 
     @GetMapping("/getAll") // http://localhost:8080/contactMessages/getAll + GET
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER', 'ASSISTANT_MANAGER)")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER', 'ASSISTANT_MANAGER')")
     public Page<ContactMessageResponse> getAll(
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size",defaultValue = "10") int size,
@@ -49,7 +50,7 @@ public class ContactMessageController {
 
     @GetMapping("/searchByEmail") // http://localhost:8080/contactMessages/searchByEmail + GET
     //   /searchbyemail?jfldsjf@dkjfd.com gibi bir parametre gelmeli
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER', 'ASSISTANT_MANAGER)")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER', 'ASSISTANT_MANAGER')")
     public Page<ContactMessageResponse> searchByEmail(
             @RequestParam(value = "email") String email, //gelen degerlerde email olmazsa hata verir. handle etmeliyiz
             @RequestParam(value = "page", defaultValue = "0") int page,
@@ -62,7 +63,7 @@ public class ContactMessageController {
 
     @GetMapping("/searchBySubject") //.../searchBySubject?subject=deneme   +GET
     //page ve pageable tum yapilar data domainden import edilmeli
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER', 'ASSISTANT_MANAGER)")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER', 'ASSISTANT_MANAGER')")
     public Page<ContactMessageResponse> searchBySubject(
             @RequestParam(value = "subject") String subject, //gelen degerlerde subject olmazsa hata verir. handle etmeliyiz
             @RequestParam(value = "page", defaultValue = "0") int page,
@@ -76,19 +77,19 @@ public class ContactMessageController {
     // Pathvariable ile silme
 
         @DeleteMapping("/deleteById/{contactMessageId}")  // http://localhost:8080/contactMessages/deleteById/1 + DELETE
-        @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER', 'ASSISTANT_MANAGER)")
+        @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER', 'ASSISTANT_MANAGER')")
         public ResponseEntity<String> deleteByIdPath(@PathVariable Long contactMessageId){
         return ResponseEntity.ok(contactMessageService.deleteById(contactMessageId));
     }
     //Requestparam ile silme
     @DeleteMapping("/deleteByIdParam") //http://localhost:8080/contactMessages/deleteByIdParam?contactMessageId=1 + DELETE
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER', 'ASSISTANT_MANAGER)")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER', 'ASSISTANT_MANAGER')")
     public ResponseEntity<String> deleteByIdParam(@RequestParam(value = "contactMessageId") Long contactMessageId){
         return ResponseEntity.ok(contactMessageService.deleteById(contactMessageId));
     }
 
     @GetMapping("/getById/{contactMessageId}") // http://localhost:8080/contactMessages/getById/1  + GET
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER', 'ASSISTANT_MANAGER)")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER', 'ASSISTANT_MANAGER')")
     public ResponseEntity<ContactMessage> getByIdWithPath(@PathVariable Long contactMessageId ){
         return ResponseEntity.ok(contactMessageService.getContactMessageById(contactMessageId));
     }
@@ -96,7 +97,7 @@ public class ContactMessageController {
 
 
     @GetMapping("/searchBetweenDates")// http://localhost:8080/contactMessages/searchBetweenDates?beginDate=2023-09-13&endDate=2023-09-15  + GET
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER', 'ASSISTANT_MANAGER)")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER', 'ASSISTANT_MANAGER')")
     public ResponseEntity<List<ContactMessage>> searchBetweenDates(
             @RequestParam(value = "beginDate") String beginDateString,
             @RequestParam(value = "endDate") String endDateString
@@ -106,7 +107,7 @@ public class ContactMessageController {
     }
 
     @GetMapping("/searchBetweenTimes") // http://localhost:8080/contactMessages/searchBetweenTimes?startHour=09&startMinute=00&endHour=17&endMinute=30  + GET
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER', 'ASSISTANT_MANAGER)")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER', 'ASSISTANT_MANAGER')")
     public ResponseEntity<List<ContactMessage>> searchBetweenTimes(
             @RequestParam(value = "startHour") String startHour,
             @RequestParam(value = "startMinute") String startMinute,

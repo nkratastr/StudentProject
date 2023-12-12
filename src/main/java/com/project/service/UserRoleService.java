@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.lang.module.ResolutionException;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -19,5 +20,8 @@ public class UserRoleService {
         return userRoleRepository.findByEnumRoleEquals(roleType).orElseThrow(
                 ()-> new ResolutionException(ErrorMessages.ROLE_NOT_FOUND)
         );
+    }
+    public List<UserRole> getAllUserRoles(){
+        return userRoleRepository.findAll();
     }
 }
