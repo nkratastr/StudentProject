@@ -37,4 +37,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
 
     List<User> getUserByNameContaining(String name);
+
+    List<User> findByAdvisorTeacherId(Long id);
 }

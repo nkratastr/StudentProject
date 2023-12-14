@@ -14,4 +14,10 @@ public static final String PASSWORD_CHANGED_RESPONSE_MESSAGE="Password changed s
 
     public static final String USER_UPDATE_MESSAGE = "User is updated Successfully";
 
+    public static final String TEACHER_SAVE = "Teacher is saved Successfully";
+
+    public static final String TEACHER_UPDATE = "Teacher is updated Successfully";
+
+    public static final String ADVISOR_TEACHER_SAVE = "Advisor Teacher is saved Successfully";
+
 }
