@@ -45,4 +45,15 @@ public class TeacherController {
     //    String userName = request.getHeader("username");
      //   return teacherService.getAllStudentByAdvisorUsername(userName);
     //}
+
+    @DeleteMapping("/deleteAdvisorTeacherById/{id}") // http://localhost:8080/teacher/deleteAdvisorTeacherById/1 + DELETE
+    @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER','ASSISTANT_MANAGER')")
+    public ResponseMessage<UserResponse> deleteAdvisorTeacherById(@PathVariable Long id){
+        return teacherService.deleteAdvisorTeacherById(id);
+    }
+    @GetMapping("/getAllAdvisorTeacher")// http://localhost:8080/teacher/getAllAdvisorTeacher + GET
+    @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER','ASSISTANT_MANAGER')")
+    public List<UserResponse> getAllAdvisorTeacher(){
+        return teacherService.getAllAdvisorTeacher();
+    }
 }

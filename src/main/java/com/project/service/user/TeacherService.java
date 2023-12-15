@@ -116,4 +116,34 @@ public class TeacherService {
                 .status(HttpStatus.OK)
                 .build();
     }
+
+    public ResponseMessage<UserResponse> deleteAdvisorTeacherById(Long teacherId) {
+
+        //!!! id var mi ?
+        User teacher = methodHelper.isUserExist(teacherId);
+        //!!! Teacher advisor mi ?
+        methodHelper.checkRole(teacher, RoleType.TEACHER); // Optional
+        methodHelper.checkAdvisor(teacher);
+        teacher.setIsAdvisor(Boolean.FALSE);
+        userRepository.save(teacher);
+
+        //!!! silinen Advisor Teacher in rehberligindeki ogrencileri ile irtibatini kopariyoruz
+        List<User> allStudents = userRepository.findByAdvisorTeacherId(teacherId);
+        if(!allStudents.isEmpty()){
+            allStudents.forEach(students-> students.setAdvisorTeacherId(null));
+        }
+
+        return ResponseMessage.<UserResponse>builder()
+                .message(SuccessMessages.ADVISOR_TEACHER_DELETE)
+                .object(userMapper.mapUserToUserResponse(teacher))
+                .status(HttpStatus.OK)
+                .build();
+    }
+    public List<UserResponse> getAllAdvisorTeacher() {
+
+        return userRepository.findAllByAdvisor(Boolean.TRUE)
+                .stream()
+                .map(userMapper::mapUserToUserResponse)
+                .collect(Collectors.toList());
+    }
 }

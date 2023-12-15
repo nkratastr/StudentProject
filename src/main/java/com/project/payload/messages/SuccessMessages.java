@@ -20,4 +20,9 @@ public static final String PASSWORD_CHANGED_RESPONSE_MESSAGE="Password changed s
 
     public static final String ADVISOR_TEACHER_SAVE = "Advisor Teacher is saved Successfully";
 
+    public static final String ADVISOR_TEACHER_DELETE = "Advisor Teacher is deleted Successfully";
+
+    public static final String STUDENT_SAVE = "Student is saved Successfully";
+    public static final String STUDENT_UPDATE = "Student is updated Successfully";
+
 }
