@@ -97,16 +97,29 @@ public class StudentService {
         //!!! unique kontrolu
         uniquePropertyValidator.checkUniqueProperties(user, studentRequest);
 
-        User studentForUpdate = userMapper.mapStudentRequestToUpdatedUser(studentRequest, userId);
-        studentForUpdate.setPassword(passwordEncoder.encode(studentRequest.getPassword()));
-        //TODO : AdvisorTeacherId  bilgisi gercekten Advisora mi ait
-        studentForUpdate.setAdvisorTeacherId(studentRequest.getAdvisorTeacherId());
-        studentForUpdate.setStudentNumber(user.getStudentNumber());
-        studentForUpdate.setUserRole(userRoleService.getUserRole(RoleType.STUDENT));
-        studentForUpdate.setActive(true);
+//        User studentForUpdate = userMapper.mapStudentRequestToUpdatedUser(studentRequest, userId);
+//        studentForUpdate.setPassword(passwordEncoder.encode(studentRequest.getPassword()));
+//        //TODO : AdvisorTeacherId  bilgisi gercekten Advisora mi ait
+//        studentForUpdate.setAdvisorTeacherId(studentRequest.getAdvisorTeacherId());
+//        studentForUpdate.setStudentNumber(user.getStudentNumber());
+//        studentForUpdate.setUserRole(userRoleService.getUserRole(RoleType.STUDENT));
+//        studentForUpdate.setActive(true);
+
+        user.setName(studentRequest.getName());
+        user.setSurname(studentRequest.getSurname());
+        user.setBirthDay(studentRequest.getBirthDay());
+        user.setBirthPlace(studentRequest.getBirthPlace());
+        user.setSsn(studentRequest.getSsn());
+        user.setEmail(studentRequest.getEmail());
+        user.setPhoneNumber(studentRequest.getPhoneNumber());
+        user.setGender(studentRequest.getGender());
+        user.setMotherName(studentRequest.getMotherName());
+        user.setFatherName(studentRequest.getFatherName());
+        user.setPassword(passwordEncoder.encode(studentRequest.getPassword()));
+        user.setAdvisorTeacherId(studentRequest.getAdvisorTeacherId());
 
         return ResponseMessage.<StudentResponse>builder()
-                .object(userMapper.mapUserToStudentResponse(userRepository.save(studentForUpdate)))
+                .object(userMapper.mapUserToStudentResponse(userRepository.save(user)))
                 .message(SuccessMessages.STUDENT_UPDATE)
                 .status(HttpStatus.OK)
                 .build();
