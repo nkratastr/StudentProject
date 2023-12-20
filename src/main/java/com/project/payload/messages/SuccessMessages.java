@@ -31,5 +31,11 @@ public static final String PASSWORD_CHANGED_RESPONSE_MESSAGE="Password changed s
 
     public static final String LESSON_SAVE = "Lesson is saved Successfully";
     public static final String LESSON_DELETE = "Lesson is deleted Successfully";
+    public static final String LESSON_FOUND = "Lesson is found Successfully";
+
+
+    public static final String LESSON_PROGRAM_SAVE = "Lesson Program is saved Successfully";
+    public static final String LESSON_PROGRAM_DELETE = "Lesson Program is deleted Successfully";
+    public static final String LESSON_PROGRAM_ADD_TO_TEACHER = "Lesson Program added to teacher";
 
 }

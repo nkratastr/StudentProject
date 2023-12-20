@@ -5,7 +5,6 @@ import com.project.exception.BadRequestException;
 import com.project.payload.mappers.UserMapper;
 import com.project.payload.messages.ErrorMessages;
 import com.project.payload.request.LoginRequest;
-import com.project.payload.request.business.UpdatePasswordRequest;
 import com.project.payload.response.AuthResponse;
 import com.project.payload.response.UserResponse;
 import com.project.repository.UserRepository;

@@ -119,6 +119,7 @@ public class EducationTermService {
     }
 
     public ResponseMessage<EducationTermResponse> updateEducationTerm(Long id, EducationTermRequest educationTermRequest) {
+
         isEducationTermExist(id);
         validateEducationTermDates(educationTermRequest);
         EducationTerm educationTerm2 =
@@ -131,5 +132,10 @@ public class EducationTermService {
                 .status(HttpStatus.OK)
                 .object(educationTermMapper.mapEducationTermToEducationTermResponse(educationTermUpdated))
                 .build();
+    }
+
+    //!!! LessonProgram icin yazildi
+    public EducationTerm findEducationTermById(Long id){
+        return isEducationTermExist(id);
     }
 }
