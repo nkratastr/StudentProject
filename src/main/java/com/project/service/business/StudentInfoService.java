@@ -7,22 +7,29 @@ import com.project.entity.concretes.user.User;
 import com.project.entity.enums.Note;
 import com.project.entity.enums.RoleType;
 import com.project.exception.ConflictException;
+import com.project.exception.ResourceNotFoundException;
 import com.project.payload.mappers.StudentInfoDto;
 import com.project.payload.messages.ErrorMessages;
 import com.project.payload.messages.SuccessMessages;
 import com.project.payload.request.business.StudentInfoRequest;
+import com.project.payload.request.business.UpdateStudentInfoRequest;
 import com.project.payload.response.ResponseMessage;
 import com.project.payload.response.business.StudentInfoResponse;
 import com.project.repository.business.StudentInfoRepository;
 import com.project.service.UserService;
 import com.project.service.helper.MethodHelper;
+import com.project.service.helper.PageableHelper;
 import com.project.service.user.TeacherService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -34,6 +41,7 @@ public class StudentInfoService {
     private final LessonService lessonService;
     private final EducationTermService educationTermService;
     private final StudentInfoDto studentInfoDto;
+    private final PageableHelper pageableHelper;
 
     @Value("${midterm.exam.impact.percentage}")
     private Double midtermExamPercentage;
@@ -110,7 +118,6 @@ public class StudentInfoService {
         }
     }
 
-
     public ResponseMessage deleteStudentInfo(Long studentInfoId) {
 
         StudentInfo studentInfo = isStudentInfoExistById(studentInfoId);
@@ -130,5 +137,67 @@ public class StudentInfoService {
         } else {
             return  studentInfoRepository.findById(id).get();
         }
+    }
+
+    public Page<StudentInfoResponse> getAllStudentInfoByPage(int page, int size, String sort, String type) {
+        Pageable pageable = pageableHelper.getPageableWithProperties(page, size, sort, type);
+        return studentInfoRepository.findAll(pageable).map(studentInfoDto::mapStudentInfoToStudentInfoResponse);
+    }
+
+    public StudentInfoResponse getStudentInfoById(Long studentInfoId) {
+
+        return studentInfoDto.mapStudentInfoToStudentInfoResponse(isStudentInfoExistById(studentInfoId));
+    }
+
+    public ResponseMessage<StudentInfoResponse> update(UpdateStudentInfoRequest studentInfoRequest, Long studentInfoId) {
+
+        Lesson lesson =lessonService.isLessonExistById(studentInfoRequest.getLessonId());
+        StudentInfo studentInfo = isStudentInfoExistById(studentInfoId);
+        EducationTerm educationTerm =
+                educationTermService.findEducationTermById(studentInfoRequest.getEducationTermId());
+        Double noteAverage =
+                calculateExamAverage(studentInfoRequest.getMidtermExam(), studentInfoRequest.getFinalExam());
+        Note note = checkLetterGrade(noteAverage);
+        StudentInfo studentInfoForUpdate = studentInfoDto.mapStudentInfoUpdateToStudentInfo(studentInfoRequest, studentInfoId,
+                lesson, educationTerm,
+                note,noteAverage);
+
+        studentInfoForUpdate.setTeacher(studentInfo.getTeacher());
+        studentInfoForUpdate.setStudent(studentInfo.getStudent());
+
+        StudentInfo updatedStudentInfo =  studentInfoRepository.save(studentInfoForUpdate);
+
+        return ResponseMessage.<StudentInfoResponse>builder()
+                .message(SuccessMessages.STUDENT_INFO_UPDATE)
+                .status(HttpStatus.OK)
+                .object(studentInfoDto.mapStudentInfoToStudentInfoResponse(updatedStudentInfo))
+                .build();
+
+    }
+
+    public Page<StudentInfoResponse> getAllForTeacher(HttpServletRequest httpServletRequest, int page, int size) {
+        Pageable pageable = pageableHelper.getPageableWithProperties(page, size);
+        String username = (String) httpServletRequest.getAttribute("username");
+
+        return studentInfoRepository.findByTeacherId_UsernameEquals(username, pageable)
+                .map(studentInfoDto::mapStudentInfoToStudentInfoResponse);
+    }
+
+    public Page<StudentInfoResponse> getAllForStudent(HttpServletRequest httpServletRequest, int page, int size) {
+        Pageable pageable = pageableHelper.getPageableWithProperties(page, size);
+        String username = (String) httpServletRequest.getAttribute("username");
+
+        return studentInfoRepository.findByStudentId_UsernameEquals(username, pageable)
+                .map(studentInfoDto::mapStudentInfoToStudentInfoResponse);
+    }
+
+    public List<StudentInfoResponse> findStudentInfoByStudentId(Long studentId) {
+        User student = methodHelper.isUserExist(studentId);
+        methodHelper.checkRole(student, RoleType.STUDENT);
+
+        return studentInfoRepository.findByStudent_IdEquals(studentId)
+                .stream()
+                .map(studentInfoDto::mapStudentInfoToStudentInfoResponse)
+                .collect(Collectors.toList());
     }
 }

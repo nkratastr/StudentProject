@@ -1,22 +1,23 @@
 package com.project.repository;
+
 import com.project.entity.concretes.user.User;
 import com.project.entity.enums.RoleType;
+import com.project.payload.response.UserResponse;
+import com.project.payload.response.user.StudentResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
-
     User findByUsernameEquals(String username);
 
+    //!!! alttaki ve ustteki ayni isi yapiyor
     User findByUsername(String username);
 
     boolean existsByUsername(String username);
@@ -26,8 +27,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     boolean existsByPhoneNumber(String phone);
 
     boolean existsByEmail(String email);
-
-
 
     @Query("SELECT u FROM User u WHERE u.userRole.roleName = :roleName") // JPQL
     Page<User> findByUserByRole(String roleName, Pageable pageable);
@@ -47,4 +46,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query(value = "SELECT MAX (u.studentNumber) FROM User u")
     int getMaxStudentNumber();
+
+    @Query("SELECT u FROM User u WHERE u.id IN :studentIds")
+    List<User> findByIdsEquals(Long[] studentIds);
+
 }

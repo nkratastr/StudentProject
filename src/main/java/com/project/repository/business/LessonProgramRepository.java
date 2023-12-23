@@ -19,5 +19,6 @@ public interface LessonProgramRepository extends JpaRepository<LessonProgram, Lo
     // SQL --> SELECT * FROM lesson_program WHERE lesson_program.id IN (2,3)
     @Query("SELECT l FROM LessonProgram l WHERE l.id IN :lessonIdSet")
     Set<LessonProgram> getLessonProgramByLessonProgramIdList(Set<Long> lessonIdSet);
-
+    Set<LessonProgram> findByUsers_IdEquals(Long userId);
 }
+

@@ -2,10 +2,11 @@ package com.project.payload.messages;
 
 public class SuccessMessages {
 
-    private SuccessMessages(){ //newlenmesin diye yaptik
+    private SuccessMessages() { //newlenmesin diye yaptik
 
     }
-public static final String PASSWORD_CHANGED_RESPONSE_MESSAGE="Password changed successfulley";
+
+    public static final String PASSWORD_CHANGED_RESPONSE_MESSAGE = "Password changed successfulley";
 
     public static final String USER_CREATE = "User is saved Successfully";
     public static final String USER_FOUND = "User is found Successfully";
@@ -38,4 +39,12 @@ public static final String PASSWORD_CHANGED_RESPONSE_MESSAGE="Password changed s
     public static final String LESSON_PROGRAM_DELETE = "Lesson Program is deleted Successfully";
     public static final String LESSON_PROGRAM_ADD_TO_TEACHER = "Lesson Program added to teacher";
 
+    public static final String LESSON_PROGRAM_ADD_TO_STUDENT = "Lesson Program added to student";
+
+
+    public static final String STUDENT_INFO_SAVE = "Student Info is saved Successfully";
+    public static final String STUDENT_INFO_DELETE = "Student Info is deleted Successfully";
+    public static final String STUDENT_INFO_UPDATE = "Student Info is updated Successfully";
+
+    public static final String MEET_SAVE = "Meet is saved Successfully";
 }

@@ -84,7 +84,6 @@ public class LessonProgramController {
         return lessonProgramService.getAllLessonProgramByUser(httpServletRequest);
     }
 
-
     // Not: ( ODEV ) getLessonProgramsByTeacherId() ******
     @PreAuthorize("hasAnyAuthority('ADMIN','MANAGER','ASSISTANT_MANAGER')")
     @GetMapping("/getAllLessonProgramByTeacherId/{teacherId}")

@@ -31,6 +31,7 @@ public class UniquePropertyValidator {
         }
 
     }
+
     public void checkUniqueProperties(User user, AbstractUserRequest abstractUserRequest){
 
         String updatedUsername = "";
@@ -67,5 +68,6 @@ public class UniquePropertyValidator {
             checkDuplicate(updatedUsername, updatedSsn, updatedPhone, updatedEmail);
         }
     }
+
 
 }
