@@ -1,6 +1,7 @@
 package com.project.controller;
 import com.project.payload.messages.SuccessMessages;
 import com.project.payload.request.LoginRequest;
+import com.project.payload.request.business.UpdatePasswordRequest;
 import com.project.payload.response.AuthResponse;
 import com.project.payload.response.UserResponse;
 import com.project.service.AuthenticationService;

@@ -21,9 +21,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-
-
-
 @EnableWebSecurity
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -40,13 +37,13 @@ public class WebSecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.cors().and()//fronted ve backenden farkli domainlerde calismasina izin veriyor. Onceden ikisi de ayni serverda oluyordu
-                .csrf().disable()// baska sekme acilip acilmamasiyla ilgili. session ile ilgilidir jwt de session olmadigi icin performans icin disable
+        http.cors().and()
+                .csrf().disable()
                 .exceptionHandling().authenticationEntryPoint(authEntryPointJwt).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests().antMatchers(AUTH_WHITE_LIST).permitAll()
                 .anyRequest().authenticated();
-        http.headers().frameOptions().sameOrigin(); //frontendde ayni originden geliyorsa kabul et
+        http.headers().frameOptions().sameOrigin();
         http.authenticationProvider(authenticationProvider());
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 
@@ -77,7 +74,7 @@ public class WebSecurityConfig {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                // su an herseye izin verilmis durumda. Canliya cikinca degisecek
+
                 registry.addMapping("/**")
                         .allowedOrigins("*")
                         .allowedHeaders("*")
@@ -88,7 +85,10 @@ public class WebSecurityConfig {
     }
 
     private static final String[] AUTH_WHITE_LIST = {
-            "/", // hepsine izin vermek
+            "/v3/api-docs/**", // eklenecek
+            "swagger-ui.html", // eklenecek
+            "/swagger-ui/**", // eklenecek
+            "/",
             "/index.html",
             "/images/**",
             "/css/**",
